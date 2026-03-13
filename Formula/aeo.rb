@@ -1,19 +1,21 @@
 class Aeo < Formula
-  desc "GEO optimization CLI by Aeolo"
-  homepage "https://github.com/Jhvictor4/aeolo"
-  # TODO: update url and sha256 when first release is cut
-  # url "https://github.com/Jhvictor4/aeolo/archive/refs/tags/v0.1.0.tar.gz"
-  # sha256 "PLACEHOLDER"
+  desc "Manage your brand visibility from the terminal"
+  homepage "https://github.com/Jhvictor4/aeo"
+  url "https://github.com/Jhvictor4/aeo/releases/download/v0.1.0/aeo-0.1.0.tar.gz"
+  sha256 "6cd55f2ca17cd1139b0605dd9619df650fa242fdb983afa1aefad181d23d775f"
   license "MIT"
 
   depends_on "node"
 
   def install
-    system "npm", "install", *std_npm_args
-    bin.install_symlink Dir["#{libexec}/bin/*"]
+    libexec.install "dist/index.js"
+    (bin/"aeo").write <<~EOS
+      #!/bin/sh
+      exec node "#{libexec}/index.js" "$@"
+    EOS
   end
 
   test do
-    assert_match version.to_s, shell_output("#{bin}/aeo --version")
+    assert_match "aeo", shell_output("#{bin}/aeo --version")
   end
 end
